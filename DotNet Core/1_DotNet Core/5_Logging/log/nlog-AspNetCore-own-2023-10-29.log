@@ -1,0 +1,13 @@
+2023-10-29 13:43:37.4511|0|DEBUG|DotNet_Core._5_Logging._2_TextLogging.LoggingTest|开始执行数据库同步 |url: |action: 
+2023-10-29 13:43:37.4731|0|DEBUG|DotNet_Core._5_Logging._2_TextLogging.LoggingTest|连接数据库成功 |url: |action: 
+2023-10-29 13:43:37.4731|0|WARN|DotNet_Core._5_Logging._2_TextLogging.LoggingTest|查找数据库失败，重试第一次 |url: |action: 
+2023-10-29 13:43:37.4731|0|WARN|DotNet_Core._5_Logging._2_TextLogging.LoggingTest|查找数据库失败，重试第二次 |url: |action: 
+2023-10-29 13:43:37.4731|0|ERROR|DotNet_Core._5_Logging._2_TextLogging.LoggingTest|查找数据库最终失败 |url: |action: 
+2023-10-29 13:43:37.4731|0|ERROR|DotNet_Core._5_Logging._2_TextLogging.LoggingTest|读取文件失败 System.IO.DirectoryNotFoundException: Could not find a part of the path 'A:\Text.txt'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Encoding encoding, Int32 bufferSize)
+   at System.IO.File.ReadAllText(String path, Encoding encoding)
+   at DotNet_Core._5_Logging._2_TextLogging.LoggingTest.Test() in D:\Programming\C#\C#Frame\DotNet Core\DotNet Core\5_Logging\2_TextLogging\LoggingTest.cs:line 21|url: |action: 

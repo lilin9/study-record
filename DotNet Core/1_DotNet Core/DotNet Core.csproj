@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>DotNet_Core</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="note\**" />
+    <EmbeddedResource Remove="note\**" />
+    <None Remove="note\**" />
+    <None Update="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0-rc.2.23479.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0-rc.2.23479.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0-rc.2.23479.6" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0-rc.2.23479.6" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.3.5" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.1-dev-00320" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="5_Logging\log\" />
+  </ItemGroup>
+
+</Project>

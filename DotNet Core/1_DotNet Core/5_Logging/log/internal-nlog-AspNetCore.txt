@@ -1,0 +1,22 @@
+2023-10-29 13:43:37.2698 Info Loading assembly name: NLog.Web.AspNetCore
+2023-10-29 13:43:37.2810 Warn Error has been raised. Exception: NLog.NLogConfigurationException: Error loading extensions: NLog.Web.AspNetCore
+ ---> System.IO.FileNotFoundException: Could not load file or assembly 'NLog.Web.AspNetCore, Culture=neutral, PublicKeyToken=null'. 系统找不到指定的文件。
+File name: 'NLog.Web.AspNetCore, Culture=neutral, PublicKeyToken=null'
+   at System.Reflection.RuntimeAssembly.InternalLoad(AssemblyName assemblyName, StackCrawlMark& stackMark, AssemblyLoadContext assemblyLoadContext, RuntimeAssembly requestingAssembly, Boolean throwOnFileNotFound)
+   at System.Reflection.Assembly.Load(String assemblyString)
+   at NLog.Config.AssemblyExtensionLoader.LoadAssemblyFromName(String assemblyName)
+   at NLog.Config.AssemblyExtensionLoader.LoadAssemblyFromName(ConfigurationItemFactory factory, String assemblyName, String itemNamePrefix)
+   at NLog.Config.LoggingConfigurationParser.ParseExtensionWithAssemblyName(String assemblyName, String prefix)
+   --- End of inner exception stack trace ---
+2023-10-29 13:43:37.3838 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2023-10-29 13:43:37.3865 Warn Error has been raised. Exception: NLog.NLogConfigurationException: Failed to create LayoutRenderer with unknown type-alias: 'aspnet-request-url' - Extension NLog.Web.AspNetCore not included?
+   at NLog.Config.FactoryExtensions.CreateInstance[TBaseType](IFactory`1 factory, String typeAlias)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(String typeName, ConfigurationItemFactory configurationItemFactory, Nullable`1 throwConfigExceptions)
+2023-10-29 13:43:37.3865 Warn Error has been raised. Exception: NLog.NLogConfigurationException: Failed to create LayoutRenderer with unknown type-alias: 'aspnet-mvc-action' - Extension NLog.Web.AspNetCore not included?
+   at NLog.Config.FactoryExtensions.CreateInstance[TBaseType](IFactory`1 factory, String typeAlias)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(String typeName, ConfigurationItemFactory configurationItemFactory, Nullable`1 throwConfigExceptions)
+2023-10-29 13:43:37.3865 Info Registered target NLog.Targets.FileTarget(Name=ownFile-web)
+2023-10-29 13:43:37.3865 Info Registered target NLog.Targets.ConsoleTarget(Name=lifetimeConsole)
+2023-10-29 13:43:37.3865 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.5.2160. Product version: 5.2.5+7c014325443d65541200b698a50b9dd4ec30c7f0. GlobalAssemblyCache: False
+2023-10-29 13:43:37.4136 Info Validating config: TargetNames=allfile, lifetimeConsole, ownFile-web, ConfigItems=51, FilePath=D:\Programming\C#\C#Frame\DotNet Core\DotNet Core\bin\Debug\net7.0\NLog.config
+2023-10-29 13:43:37.4290 Info Configuration initialized.
