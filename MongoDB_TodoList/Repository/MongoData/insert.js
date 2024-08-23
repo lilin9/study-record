@@ -1,5 +1,9 @@
 use db_todoList;
 
+db.createCollection("UserInfo");
+db.createCollection("TodoList");
+db.createCollection("UpdateLog");
+
 db.UserInfo.insert({
     "UserName": "admin123",
     "Password": "E10ADC3949BA59ABBE56E057F20F883E",

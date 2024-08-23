@@ -1,16 +1,18 @@
-﻿using NETCore.Encrypt;
+﻿using MongoDB.Bson;
+using NETCore.Encrypt;
 
-namespace Repository.Entities {
+namespace Domain.Entities {
     public class UserInfo: BaseEntity {
-        private UserInfo() { }
+        public UserInfo() { }
 
-        public UserInfo(string userName, string password, string? nickName, string? headPortrait, string email, byte status) {
-            UserName = userName;
-            Password = password;
-            NickName = nickName;
-            HeadPortrait = headPortrait;
-            Email = email;
-            Status = status;
+        public UserInfo(Builder builder) {
+            Id = ObjectId.GenerateNewId().ToString();
+            UserName = builder.UserName;
+            Password = builder.Password;
+            NickName = builder.NickName;
+            HeadPortrait = builder.HeadPortrait;
+            Email = builder.Email;
+            Status = builder.Status;
             CreateTime = DateTime.Now;
             UpdateTime = DateTime.Now;
         }
@@ -18,44 +20,86 @@ namespace Repository.Entities {
         /// <summary>
         /// 登录账号
         /// </summary>
-        public string UserName { get; private set; }
+        public string UserName { get; set; }
 
         /// <summary>
         /// 登录密码
         /// </summary>
 
         public string Password {
-            get => Password;
-            private set => LockPassword(Password);
+            get; set;
         }
 
         /// <summary>
         /// 用户昵称
         /// </summary>
-        public string? NickName { get; private set; }
+        public string? NickName { get; set; }
 
         /// <summary>
         /// 用户头像
         /// </summary>
-        public string? HeadPortrait { get; private set; }
+        public string? HeadPortrait { get; set; }
 
         /// <summary>
         /// 用户邮箱
         /// </summary>
-        public string Email { get; private set; }
+        public string Email { get; set; }
 
         /// <summary>
         /// 用户状态（0冻结，1正常，2注销）
         /// </summary>
-        public byte Status { get; private set; }
+        public int Status { get; set; } = 1;
 
+        public class Builder {
+            public string UserName { get; private set; }
 
-        /// <summary>
-        /// 将用户密码进行md5加密
-        /// </summary>
-        /// <param name="password"></param>
-        public void LockPassword(string password) {
-            Password = EncryptProvider.Md5(password);
+            public string Password { get; private set; }
+
+            public string? NickName { get; private set; }
+
+            public string? HeadPortrait { get; private set; }
+
+            public string Email { get; private set; }
+
+            public int Status { get; private set; }
+
+            public Builder SetUserName(string userName) {
+                UserName = userName;
+                return this;
+            }
+
+            public Builder SetPassword(string password) {
+                Password = LockPassword(password);
+                return this;
+            }
+
+            public Builder SetNickName(string? nickName) {
+                NickName = nickName;
+                return this;
+            }
+
+            public Builder SetHeadPortrait(string? headPortrait) {
+                HeadPortrait = headPortrait;
+                return this;
+            }
+
+            public Builder SetEmail(string email) {
+                Email = email;
+                return this;
+            }
+
+            public Builder SetStatus(int status) {
+                Status = status;
+                return this;
+            }
+
+            /// <summary>
+            /// 将用户密码进行md5加密
+            /// </summary>
+            /// <param name="password"></param>
+            private string LockPassword(string password) {
+                return EncryptProvider.Md5(password);
+            }
         }
     }
 }
