@@ -1,0 +1,10 @@
+﻿@page "/todoList"
+@rendermode InteractiveServer
+
+<PageTitle>TodoList</PageTitle>
+
+<div class="grid">
+    <Table TItem="Domain.Entities.TodoList" Items="@TodoLists" IsPagination="true" ItemsPerPage="10" ShowToolbar="true">
+    </Table>
+    
+</div>

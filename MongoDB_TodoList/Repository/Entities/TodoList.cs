@@ -2,7 +2,7 @@
 
 namespace Domain.Entities {
     public class TodoList: BaseEntity {
-        private TodoList() { }
+        public TodoList() { }
 
         public TodoList(Builder builder) {
             Id = ObjectId.GenerateNewId().ToString();
@@ -16,45 +16,68 @@ namespace Domain.Entities {
             UpdateTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// 待办事项关联的用户id
+        /// </summary>
         public string UserId { get; set; }
+
+        /// <summary>
+        /// 待办事项内容
+        /// </summary>
         public string? Content { get; set; }
+
+        /// <summary>
+        /// 过期时间
+        /// </summary>
         public DateTime ExpirationTime { get; set; }
+
+        /// <summary>
+        /// 是否需要提醒
+        /// </summary>
         public bool IsRemind { get; set; }
+
+        /// <summary>
+        /// 提醒时间
+        /// </summary>
         public int RemindTime { get; set; }
+
+        /// <summary>
+        /// 这条待办事项是否已经完成
+        /// </summary>
         public int CompleteStatus { get; set; }
-    }
 
-    public abstract partial class Builder {
-        public string UserId { get; private set; }
-        public string? Content { get; private set; }
-        public DateTime ExpirationTime { get; private set; }
-        public bool IsRemind { get; private set; }
-        public int RemindTime { get; private set; }
-        public int CompleteStatus { get; private set; }
+        public class Builder {
+            public string UserId { get; private set; }
+            public string? Content { get; private set; }
+            public DateTime ExpirationTime { get; private set; }
+            public bool IsRemind { get; private set; }
+            public int RemindTime { get; private set; }
+            public int CompleteStatus { get; private set; }
 
-        public Builder SetUserId(string userId) {
-            UserId = userId;
-            return this;
-        }
-        public Builder SetContent(string? content) {
-            Content = content;
-            return this;
-        }
-        public Builder SetExpirationTime(DateTime expirationTime) {
-            ExpirationTime = expirationTime;
-            return this;
-        }
-        public Builder SetIsRemind(bool isRemind) {
-            IsRemind = isRemind;
-            return this;
-        }
-        public Builder SetRemindTime(int remindTime) {
-            RemindTime = remindTime;
-            return this;
-        }
-        public Builder SetCompleteStatus(int completeStatus) {
-            CompleteStatus = completeStatus;
-            return this;
+            public Builder SetUserId(string userId) {
+                UserId = userId;
+                return this;
+            }
+            public Builder SetContent(string? content) {
+                Content = content;
+                return this;
+            }
+            public Builder SetExpirationTime(DateTime expirationTime) {
+                ExpirationTime = expirationTime;
+                return this;
+            }
+            public Builder SetIsRemind(bool isRemind) {
+                IsRemind = isRemind;
+                return this;
+            }
+            public Builder SetRemindTime(int remindTime) {
+                RemindTime = remindTime;
+                return this;
+            }
+            public Builder SetCompleteStatus(int completeStatus) {
+                CompleteStatus = completeStatus;
+                return this;
+            }
         }
     }
 }

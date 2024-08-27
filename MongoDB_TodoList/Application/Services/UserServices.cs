@@ -61,8 +61,12 @@ namespace Application.Services {
         /// <returns></returns>
         public async Task<UserInfo> AddUserInfo(UserVm vm) {
             var builder = new UserInfo.Builder()
-                .SetUserName(vm.UserName).SetPassword(vm.Password).SetNickName(vm.NickName)
-                .SetHeadPortrait(vm.HeadPortrait).SetEmail(vm.Email).SetStatus(vm.Status);
+                .SetUserName(vm.UserName)
+                .SetPassword(vm.Password)
+                .SetNickName(vm.NickName)
+                .SetHeadPortrait(vm.HeadPortrait)
+                .SetEmail(vm.Email)
+                .SetStatus(vm.Status);
             var userInfo = new UserInfo(builder);
 
             await userRepository.AddAsync(userInfo);
@@ -78,8 +82,12 @@ namespace Application.Services {
             using var session = await unityOfWork.InitTransaction();
 
             var builder = new UserInfo.Builder()
-                .SetUserName(vm.UserName).SetPassword(vm.Password).SetNickName(vm.NickName)
-                .SetHeadPortrait(vm.HeadPortrait).SetEmail(vm.Email).SetStatus(vm.Status);
+                .SetUserName(vm.UserName)
+                .SetPassword(vm.Password)
+                .SetNickName(vm.NickName)
+                .SetHeadPortrait(vm.HeadPortrait)
+                .SetEmail(vm.Email)
+                .SetStatus(vm.Status);
             var userInfo = new UserInfo(builder);
 
             //调用添加数据的事务操作
