@@ -3,8 +3,9 @@ using Domain;
 using Domain.Repository;
 using Infrastructure;
 using Infrastructure.RepositoryImpl;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace WebApi.Extensions {
+namespace Common.Extensions {
     public static class IocExtensions {
         /// <summary>
         /// ioc注入统一管理
@@ -15,9 +16,11 @@ namespace WebApi.Extensions {
             services.AddSingleton<IMongoConnection, MongoConnection>();
             services.AddScoped<IMongoDbContext, MongoDbContext>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITodoListRepository, TodoListRepository>();
 
             services.AddScoped<UnityOfWork>();
             services.AddScoped<UserServices>();
+            services.AddScoped<TodoListService>();
         }
     }
 }

@@ -1,3 +1,4 @@
+using Common.Extensions;
 using WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);

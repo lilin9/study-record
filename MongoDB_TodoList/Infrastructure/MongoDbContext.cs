@@ -42,7 +42,7 @@ namespace Infrastructure {
                 //提交事务
                 await session.CommitTransactionAsync();
                 return _commands.Count;
-            } catch (Exception e) {
+            } catch (Exception) {
                 //事务回滚
                 await session.AbortTransactionAsync();
                 return 0;

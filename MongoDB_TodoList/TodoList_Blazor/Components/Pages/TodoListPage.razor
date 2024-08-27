@@ -1,0 +1,39 @@
+﻿@page "/todoList"
+@rendermode InteractiveServer
+
+<PageTitle>TodoList</PageTitle>
+
+<div class="grid">
+    <Table TItem="Modules.TodoList" Items="@TodoLists" IsPagination="true" ItemsPerPage="10" ShowToolbar="true">
+        <TableColumns>
+            <TableColumn @bind-Field="@context.Content"/>
+            <TableColumn @bind-Field="@context.IsRemind">
+                <Template Context="value">
+                    @* @if (value.Row.IsRemind) *@
+                    @* { *@
+                    @*     <span>是</span> *@
+                    @* } *@
+                    @* else { *@
+                    @*     <span>否</span> *@
+                    @* } *@
+                    <span>@value</span>
+                </Template>
+            </TableColumn>
+            <TableColumn @bind-Field="@context.RemindTime"/>
+            <TableColumn @bind-Field="@context.CompleteStatus">
+                <Template Context="value">
+                    @* @if (value.Row.CompleteStatus) { *@
+                    @*     <span>完成</span> *@
+                    @* } *@
+                    @* else { *@
+                    @*     <span>没有完成</span> *@
+                    @* } *@
+                    <span>@value</span>
+                </Template>
+            </TableColumn>
+            <TableColumn @bind-Field="@context.CreateTime"/>
+            <TableColumn @bind-Field="@context.UpdateTime"/>
+        </TableColumns>
+    </Table>
+
+</div>
