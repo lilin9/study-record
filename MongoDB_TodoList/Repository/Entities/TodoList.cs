@@ -39,7 +39,7 @@ namespace Domain.Entities {
         /// <summary>
         /// 提醒时间
         /// </summary>
-        public int RemindTime { get; set; }
+        public DateTime RemindTime { get; set; }
 
         /// <summary>
         /// 这条待办事项是否已经完成
@@ -51,7 +51,7 @@ namespace Domain.Entities {
             public string? Content { get; private set; }
             public DateTime ExpirationTime { get; private set; }
             public bool IsRemind { get; private set; }
-            public int RemindTime { get; private set; }
+            public DateTime RemindTime { get; private set; }
             public int CompleteStatus { get; private set; }
 
             public Builder SetUserId(string userId) {
@@ -70,7 +70,7 @@ namespace Domain.Entities {
                 IsRemind = isRemind;
                 return this;
             }
-            public Builder SetRemindTime(int remindTime) {
+            public Builder SetRemindTime(DateTime remindTime) {
                 RemindTime = remindTime;
                 return this;
             }

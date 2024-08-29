@@ -1,0 +1,66 @@
+﻿@using Domain.Entities
+
+<Modal Title="编辑" Visible="@Visible" OnOk="@OnOkHandler" OnCancel="OnCancelHandler" Draggable="@(true)">
+    <ChildContent>
+        <Form @ref="FormRef" Model="ModelCache" ValidateMode="@FormValidateMode.Rules">
+            <FormItem Label="清单内容" Required>
+                <Input @bind-Value="@context.Content" />
+            </FormItem>
+            <FormItem Label="提醒时间" Required>
+                <DatePicker Value="context.RemindTime" TValue="DateTime?" ShowTime="@true" Format="yyyy/MM/dd HH:mm:ss" Mask="yyyy/MM/dd HH:mm:ss" Placeholder="@("yyyy/MM/dd HH:mm:ss")" />
+            </FormItem>
+            <FormItem Label="是否提醒" Required>
+                <RadioGroup @bind-Value="@context.IsRemind">
+                    <Radio Value="@true">要提醒</Radio>
+                    <Radio Value="@false">不提醒</Radio>
+                </RadioGroup>
+            </FormItem>
+            <FormItem Label="是否完成" Required>
+                <RadioGroup @bind-Value="@context.CompleteStatus">
+                    <Radio Value="1">已完成</Radio>
+                    <Radio Value="0">未完成</Radio>
+                </RadioGroup>
+            </FormItem>
+        </Form>
+    </ChildContent>
+</Modal>
+
+@code {
+
+    [Parameter]
+    public bool Visible { get; set; }
+    [Parameter]
+    public TodoList Model { get; set; } = null!;
+
+    //对 Model 进行缓存
+    private TodoList? ModelCache { get; set; }
+    //表单引用
+    public Form<TodoList> FormRef { get; set; } = null!;
+
+    //确认按钮点击事件的委托
+    [Parameter]
+    public EventCallback<TodoList> OnEditSure { get; set; }
+
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    protected override void OnInitialized() {
+        ModelCache = Model;
+    }
+
+    /// <summary>
+    /// 确认点击事件
+    /// </summary>
+    /// <returns></returns>
+    private async Task OnOkHandler() {
+        await OnEditSure.InvokeAsync(ModelCache);
+    }
+
+    /// <summary>
+    /// 取消点击事件
+    /// </summary>
+    private void OnCancelHandler() {
+        ModelCache = Model;
+        Visible = false;
+    }
+}

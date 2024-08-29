@@ -1,0 +1,38 @@
+﻿@page "/todoList"
+@using Domain.Entities
+@using TodoList_Blazor.Client.Components
+
+<h3>TodoListPage</h3>
+
+<Table @ref="_tableRef" TItem="TodoList" DataSource="TodoDataSource" Total="_totalCount" OnChange="OnChangeHandler">
+    <ColumnDefinitions Context="row">
+        <Selection/>
+        <PropertyColumn Title="清单内容" Property="t => t.Content"/>
+        <PropertyColumn Title="是否提醒" Property="t => t.IsRemind">
+            <Template>
+                @{
+                    <span>@(row.IsRemind ? "提醒" : "不提醒")</span>
+                }
+            </Template>
+        </PropertyColumn>
+        <PropertyColumn Title="提醒时间" Property="t => t.RemindTime"/>
+        <PropertyColumn Title="是否完成" Property="t => t.CompleteStatus">
+            <Template>
+                @{
+                    <span>@(row.CompleteStatus == 1 ? "已完成" : "未完成")</span>
+                }
+            </Template>
+        </PropertyColumn>
+        <PropertyColumn Title="过期时间" Property="t => t.ExpirationTime"/>
+        <PropertyColumn Title="创建时间" Property="t => t.CreateTime"/>
+        <PropertyColumn Title="修改时间" Property="t => t.UpdateTime"/>
+        <ActionColumn Title="操作">
+            <a @onclick="() => OnEditHandler(row)">编辑</a>
+            <a @onclick="() => OnDeleteHandler(row)">删除</a>
+        </ActionColumn>
+    </ColumnDefinitions>
+</Table>
+
+
+//修改弹出框
+<TodoListEdit Model="EditTodoData" Visible="@EditVisible" OnEditSure="@TodoListEditHandler"/>

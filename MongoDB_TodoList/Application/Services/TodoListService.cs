@@ -116,7 +116,10 @@ namespace Application.Services
             var updateDefinition = Builders<TodoList>.Update
                 .Set(t => t.Content, todo.Content)
                 .Set(t => t.ExpirationTime, todo.ExpirationTime)
-                .Set(t => t.CompleteStatus, todo.CompleteStatus);
+                .Set(t => t.CompleteStatus, todo.CompleteStatus)
+                .Set(t => t.RemindTime, todo.RemindTime)
+                .Set(t => t.IsRemind, todo.IsRemind)
+                .Set(t => t.UpdateTime, DateTime.Now);
 
             //修改数据
             await todoListRepository.UpdateAsync(filter, updateDefinition);

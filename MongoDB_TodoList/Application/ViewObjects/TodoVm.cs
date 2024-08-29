@@ -4,7 +4,7 @@
         public string? Content { get; set; }
         public DateTime ExpirationTime { get; set; }
         public bool IsRemind { get; set; } = false;
-        public int RemindTime { get; set; }
+        public DateTime RemindTime { get; set; }
         public int CompleteStatus { get; set; }
     }
 }
