@@ -1,8 +1,10 @@
-﻿using AntDesign;
-using AntDesign.TableModels;
+﻿using AntDesign.TableModels;
 using Application.Services;
+using Application.ViewObjects;
 using Domain.Entities;
 using Microsoft.AspNetCore.Components;
+using System.Diagnostics.CodeAnalysis;
+using TodoList_Blazor.Client.Common;
 
 namespace TodoList_Blazor.Client.Pages
 {
@@ -19,10 +21,13 @@ namespace TodoList_Blazor.Client.Pages
         //修改框显隐控制
         private bool EditVisible { get; set; }
         //要修改的Todo数据
-        private TodoList EditTodoData { get; set; }
+        private TodoList? EditTodoData { get; set; }
+        //表格的选中行
+        private IEnumerable<TodoList> SelectedRows { get; set; } = null!;
 
         [Inject]
-        private TodoListService TodoService { get; set; } = null!;
+        [NotNull]
+        private TodoListService TodoService { get; set; }
 
         [Inject]
         private IMessageService MessageService { get; set; } = null!;
@@ -50,16 +55,38 @@ namespace TodoList_Blazor.Client.Pages
         async void OnEditHandler(TodoList row)
         {
             EditVisible = true;
-            EditTodoData = row;
+            EditTodoData = ObjectUtil.DeepCopy(row);
         }
 
         /// <summary>
         /// 删除按钮点击事件
         /// </summary>
         /// <param name="row"></param>
-        async void OnDeleteHandler(TodoList row)
+        async Task OnDeleteHandler(TodoList row)
         {
-            await MessageService.Error("bad boy");
+            if (string.IsNullOrEmpty(row.Id))
+            {
+                await MessageService.Error("请重新选择数据");
+                return;
+            }
+
+            var isExists = await ExistsById(row.Id);
+            if (!isExists)
+            {
+                await MessageService.Error("选择的数据不存在，请刷新后重试");
+                return;
+            }
+
+            var deleteResult = await TodoService.Delete(row.Id);
+            if (deleteResult)
+            {
+                await MessageService.Success("删除成功");
+                _tableRef.ReloadData();
+            }
+            else
+            {
+                await MessageService.Error("删除失败");
+            }
         }
 
         /// <summary>
@@ -73,12 +100,25 @@ namespace TodoList_Blazor.Client.Pages
         }
 
         /// <summary>
-        /// 待办事项修改函数
+        /// 待办事项修改弹出框，点击按钮点击会触发的事件
         /// </summary>
         /// <param name="editedModel"></param>
-        private void TodoListEditHandler(TodoList editedModel)
+        private async Task TodoListEditHandler(TodoList editedModel)
         {
-
+            var todoVm = ObjectUtil.ObjectCopy<TodoList, TodoVm>(editedModel);
+            // var todoVm = new TodoVm
+            // {
+            //     CompleteStatus = editedModel.CompleteStatus,
+            //     Content = editedModel.Content,
+            //     ExpirationTime = editedModel.ExpirationTime,
+            //     IsRemind = editedModel.IsRemind,
+            //     RemindTime = editedModel.RemindTime,
+            //     UserId = editedModel.UserId
+            // };
+            _ = await TodoService.UpdateTodoList(editedModel.Id, todoVm);
+            await MessageService.Success("编辑成功！");
+            _tableRef.ReloadData();
+            EditVisible = false;
         }
 
         /// <summary>
@@ -89,6 +129,17 @@ namespace TodoList_Blazor.Client.Pages
         {
             var todos = await TodoService.GetAllTodoList();
             TodoLists = todos.ToList();
+        }
+
+        /// <summary>
+        /// 传入Id判断TodoList是否存在
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private async Task<bool> ExistsById(string id)
+        {
+            var result = await TodoService.GetTodoListById(id);
+            return result != null;
         }
     }
 }

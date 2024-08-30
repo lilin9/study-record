@@ -1,11 +1,13 @@
-﻿using System.Linq.Expressions;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
+using System.Linq.Expressions;
 
-namespace Domain.Repository {
+namespace Domain.Repository
+{
     /// <summary>
     /// MongoDB通用型仓储，将对 MongoDB 的增、删、改、查抽象出来
     /// </summary>
-    public interface IMongoDbRepository<T> where T: class, new() {
+    public interface IMongoDbRepository<T> where T : class, new()
+    {
         #region 事务操作
 
         /// <summary>
@@ -42,14 +44,14 @@ namespace Domain.Repository {
         /// </summary>
         /// <param name="objData"></param>
         /// <returns></returns>
-        Task AddAsync(T  objData);
+        Task AddAsync(T objData);
 
         /// <summary>
         /// 批量添加
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        Task InsertManyAsync(List<T>  list);
+        Task InsertManyAsync(List<T> list);
 
         #endregion
 
@@ -72,7 +74,7 @@ namespace Domain.Repository {
         #endregion
 
         #region 修改相关
-        
+
         /// <summary>
         /// 修改一条
         /// </summary>

@@ -1,5 +1,7 @@
-﻿namespace Application.ViewObjects {
-    public class UserPageVm {
+﻿namespace Application.ViewObjects
+{
+    public class UserPageVm
+    {
         public string? Id { get; set; }
         public string? NickName { get; set; }
         public int PageIndex { get; set; } = 1;

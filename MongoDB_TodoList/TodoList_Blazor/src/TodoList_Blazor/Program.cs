@@ -1,7 +1,6 @@
-﻿using TodoList_Blazor.Client.Pages;
+﻿using AntDesign.ProLayout;
+using TodoList_Blazor.Client.Extensions;
 using TodoList_Blazor.Components;
-using AntDesign.ProLayout;
-using Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

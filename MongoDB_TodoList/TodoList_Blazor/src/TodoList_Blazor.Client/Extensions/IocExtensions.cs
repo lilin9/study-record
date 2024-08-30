@@ -3,16 +3,18 @@ using Domain;
 using Domain.Repository;
 using Infrastructure;
 using Infrastructure.RepositoryImpl;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Common.Extensions {
-    public static class IocExtensions {
+namespace TodoList_Blazor.Client.Extensions
+{
+    public static class IocExtensions
+    {
         /// <summary>
         /// ioc注入统一管理
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static void AddServices(this IServiceCollection services) {
+        public static void AddServices(this IServiceCollection services)
+        {
             services.AddSingleton<IMongoConnection, MongoConnection>();
             services.AddScoped<IMongoDbContext, MongoDbContext>();
             services.AddScoped<IUserRepository, UserRepository>();

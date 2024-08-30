@@ -1,12 +1,15 @@
 ﻿using Domain;
 using MongoDB.Driver;
 
-namespace Infrastructure {
+namespace Infrastructure
+{
     /// <summary>
     /// 在工作单元里统一管理所有Repository的SaveChanges和事物的回滚与提交
     /// </summary>
-    public class UnityOfWork(IMongoDbContext dbContext): IDisposable {
-        public void Dispose() {
+    public class UnityOfWork(IMongoDbContext dbContext) : IDisposable
+    {
+        public void Dispose()
+        {
             dbContext.Dispose();
         }
 
@@ -15,7 +18,8 @@ namespace Infrastructure {
         /// </summary>
         /// <param name="session">MongoDb会话</param>
         /// <returns></returns>
-        public async Task<bool> Commit(IClientSessionHandle session) {
+        public async Task<bool> Commit(IClientSessionHandle session)
+        {
             return await dbContext.SaveChangesAsync(session) > 0;
         }
 
@@ -23,7 +27,8 @@ namespace Infrastructure {
         /// 初始化MongoDb会话对象
         /// </summary>
         /// <returns></returns>
-        public async Task<IClientSessionHandle> InitTransaction() {
+        public async Task<IClientSessionHandle> InitTransaction()
+        {
             return await dbContext.StartSessionAsync();
         }
     }

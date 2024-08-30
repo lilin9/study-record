@@ -1,17 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq.Expressions;
-using Domain;
+﻿using Domain;
 using Domain.Repository;
 using Infrastructure.Extensions;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq.Expressions;
 
-namespace Infrastructure.RepositoryImpl {
-    public class MongoDbRepository<T>: IMongoDbRepository<T> where T : class, new() {
+namespace Infrastructure.RepositoryImpl
+{
+    public class MongoDbRepository<T> : IMongoDbRepository<T> where T : class, new()
+    {
         private readonly IMongoCollection<T> _dbSet;
         private readonly IMongoDbContext _context;
 
-        protected MongoDbRepository(IMongoDbContext context) {
+        protected MongoDbRepository(IMongoDbContext context)
+        {
             _context = context;
             var collectionName = typeof(T).GetAttributeValue((TableAttribute m) => m.Name) ?? typeof(T).Name;
             _dbSet = _context.GetCollection<T>(collectionName);
@@ -26,7 +29,8 @@ namespace Infrastructure.RepositoryImpl {
         /// <param name="session">mongodb会话</param>
         /// <param name="objData">需要添加的数据</param>
         /// <returns></returns>
-        public async Task AddTransactionsAsync(IClientSessionHandle session, T objData) {
+        public async Task AddTransactionsAsync(IClientSessionHandle session, T objData)
+        {
             await _context.AddCommandAsync(async _ => await _dbSet.InsertOneAsync(objData));
         }
 
@@ -36,7 +40,8 @@ namespace Infrastructure.RepositoryImpl {
         /// <param name="session">mongo会话</param>
         /// <param name="id">objectId</param>
         /// <returns></returns>
-        public async Task DeleteTransactionsAsync(IClientSessionHandle session, string id) {
+        public async Task DeleteTransactionsAsync(IClientSessionHandle session, string id)
+        {
             await _context.AddCommandAsync(_ => _dbSet.DeleteOneAsync(Builders<T>.Filter.Eq("_id", id)));
         }
 
@@ -47,7 +52,8 @@ namespace Infrastructure.RepositoryImpl {
         /// <param name="filter">过滤器</param>
         /// <param name="update">更新条件</param>
         /// <returns></returns>
-        public async Task UpdateTransactionsAsync(IClientSessionHandle session, FilterDefinition<T> filter, UpdateDefinition<T> update) {
+        public async Task UpdateTransactionsAsync(IClientSessionHandle session, FilterDefinition<T> filter, UpdateDefinition<T> update)
+        {
             await _context.AddCommandAsync(_ => _dbSet.UpdateOneAsync(filter, update));
         }
 
@@ -60,7 +66,8 @@ namespace Infrastructure.RepositoryImpl {
         /// </summary>
         /// <param name="objData"></param>
         /// <returns></returns>
-        public async Task AddAsync(T objData) {
+        public async Task AddAsync(T objData)
+        {
             await _dbSet.InsertOneAsync(objData);
         }
 
@@ -69,7 +76,8 @@ namespace Infrastructure.RepositoryImpl {
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public async Task InsertManyAsync(List<T> list) {
+        public async Task InsertManyAsync(List<T> list)
+        {
             await _dbSet.InsertManyAsync(list);
         }
 
@@ -78,7 +86,8 @@ namespace Infrastructure.RepositoryImpl {
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task DeleteAsync(string id) {
+        public async Task DeleteAsync(string id)
+        {
             await _dbSet.DeleteOneAsync(Builders<T>.Filter.Eq("_id", new ObjectId(id)));
         }
 
@@ -87,7 +96,8 @@ namespace Infrastructure.RepositoryImpl {
         /// </summary>
         /// <param name="filter">删除条件</param>
         /// <returns></returns>
-        public async Task<DeleteResult> DeleteManyAsync(FilterDefinition<T> filter) {
+        public async Task<DeleteResult> DeleteManyAsync(FilterDefinition<T> filter)
+        {
             return await _dbSet.DeleteManyAsync(filter);
         }
 
@@ -101,13 +111,16 @@ namespace Infrastructure.RepositoryImpl {
         /// <param name="data">需要更新成的数据</param>
         /// <param name="id">修改数据的Id</param>
         /// <returns></returns>
-        public async Task UpdateAsync(T data, string id) {
+        public async Task UpdateAsync(T data, string id)
+        {
             //修改条件
             var filter = Builders<T>.Filter.Eq("_id", new ObjectId(id));
             //获取数据中需要修改的字段
             var list = new List<UpdateDefinition<T>>();
-            foreach (var property in data.GetType().GetProperties()) {
-                if (property.Name.ToLower() == "id") {
+            foreach (var property in data.GetType().GetProperties())
+            {
+                if (property.Name.ToLower() == "id")
+                {
                     continue;
                 }
                 list.Add(Builders<T>.Update.Set(property.Name, property.GetValue(data)));
@@ -125,27 +138,36 @@ namespace Infrastructure.RepositoryImpl {
         /// <param name="expression">筛选条件</param>
         /// <param name="entity">更新条件</param>
         /// <returns></returns>
-        public async Task UpdateAsync(Expression<Func<T, bool>> expression, Expression<Action<T>> entity) {
+        public async Task UpdateAsync(Expression<Func<T, bool>> expression, Expression<Action<T>> entity)
+        {
             var fieldList = new List<UpdateDefinition<T>>();
-            if (entity.Body is MemberInitExpression param) {
-                foreach (var item in param.Bindings) {
+            if (entity.Body is MemberInitExpression param)
+            {
+                foreach (var item in param.Bindings)
+                {
                     var propertyName = item.Member.Name;
                     object? propertyValue = null;
 
-                    if (item is not MemberAssignment memberAssignment) {
+                    if (item is not MemberAssignment memberAssignment)
+                    {
                         continue;
                     }
 
-                    if (memberAssignment.Expression.NodeType == ExpressionType.Constant) {
-                        if (memberAssignment.Expression is ConstantExpression constantExpression) {
+                    if (memberAssignment.Expression.NodeType == ExpressionType.Constant)
+                    {
+                        if (memberAssignment.Expression is ConstantExpression constantExpression)
+                        {
                             propertyValue = constantExpression.Value;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         propertyValue = Expression.Lambda(memberAssignment.Expression, null).Compile().DynamicInvoke();
                     }
 
                     //不是_id主键的字段才可以允许更新
-                    if (propertyName != "_id") {
+                    if (propertyName != "_id")
+                    {
                         fieldList.Add(Builders<T>.Update.Set(propertyName, propertyValue));
                     }
                 }
@@ -160,7 +182,8 @@ namespace Infrastructure.RepositoryImpl {
         /// <param name="filter">过滤器</param>
         /// <param name="update">更新条件</param>
         /// <returns></returns>
-        public async Task UpdateAsync(FilterDefinition<T> filter, UpdateDefinition<T> update) {
+        public async Task UpdateAsync(FilterDefinition<T> filter, UpdateDefinition<T> update)
+        {
             await _dbSet.UpdateOneAsync(filter, update);
         }
 
@@ -170,7 +193,8 @@ namespace Infrastructure.RepositoryImpl {
         /// <param name="expression">筛选条件</param>
         /// <param name="update">更新条件</param>
         /// <returns></returns>
-        public async Task UpdateManyAsync(Expression<Func<T, bool>> expression, UpdateDefinition<T> update) {
+        public async Task UpdateManyAsync(Expression<Func<T, bool>> expression, UpdateDefinition<T> update)
+        {
             await _dbSet.UpdateManyAsync(expression, update);
         }
 
@@ -180,12 +204,15 @@ namespace Infrastructure.RepositoryImpl {
         /// <param name="dic">需要修改的字段</param>
         /// <param name="filter">更新条件</param>
         /// <returns></returns>
-        public async Task<UpdateResult> UpdateManyAsync(Dictionary<string, string> dic, FilterDefinition<T> filter) {
+        public async Task<UpdateResult> UpdateManyAsync(Dictionary<string, string> dic, FilterDefinition<T> filter)
+        {
             var t = new T();
             //获取需要修改的字段
             var list = new List<UpdateDefinition<T>>();
-            foreach (var item in t.GetType().GetProperties()) {
-                if (!dic.TryGetValue(item.Name, out var value)) {
+            foreach (var item in t.GetType().GetProperties())
+            {
+                if (!dic.TryGetValue(item.Name, out var value))
+                {
                     continue;
                 }
 
@@ -205,7 +232,8 @@ namespace Infrastructure.RepositoryImpl {
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<T> GetByIdAsync(string id) {
+        public async Task<T> GetByIdAsync(string id)
+        {
             var result = await _dbSet.FindAsync(Builders<T>.Filter.Eq("_id", new ObjectId(id)));
             return result.FirstOrDefault();
         }
@@ -214,7 +242,8 @@ namespace Infrastructure.RepositoryImpl {
         /// 查询所有
         /// </summary>
         /// <returns></returns>
-        public async Task<List<T>> GetAllAsync() {
+        public async Task<List<T>> GetAllAsync()
+        {
             var result = await _dbSet.FindAsync(Builders<T>.Filter.Empty);
             return result.ToList();
         }
@@ -224,7 +253,8 @@ namespace Infrastructure.RepositoryImpl {
         /// </summary>
         /// <param name="expression">筛选方法</param>
         /// <returns></returns>
-        public async Task<long> CountAsync(Expression<Func<T, bool>> expression) {
+        public async Task<long> CountAsync(Expression<Func<T, bool>> expression)
+        {
             return await _dbSet.CountDocumentsAsync(expression);
         }
 
@@ -233,7 +263,8 @@ namespace Infrastructure.RepositoryImpl {
         /// </summary>
         /// <param name="filter">过滤器</param>
         /// <returns></returns>
-        public async Task<long> CountAsync(FilterDefinition<T> filter) {
+        public async Task<long> CountAsync(FilterDefinition<T> filter)
+        {
             return await _dbSet.CountDocumentsAsync(filter);
         }
 
@@ -242,7 +273,8 @@ namespace Infrastructure.RepositoryImpl {
         /// </summary>
         /// <param name="predicate">判断条件</param>
         /// <returns></returns>
-        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate) {
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+        {
             return await Task.FromResult(_dbSet.AsQueryable().Any(predicate));
         }
 
@@ -253,10 +285,13 @@ namespace Infrastructure.RepositoryImpl {
         /// <param name="fields">需要查询的字段，无则查询所有</param>
         /// <param name="sort">需要排序的字段</param>
         /// <returns></returns>
-        public async Task<List<T>> FindListAsync(FilterDefinition<T> filter, string[]? fields = null, SortDefinition<T>? sort = null) {
+        public async Task<List<T>> FindListAsync(FilterDefinition<T> filter, string[]? fields = null, SortDefinition<T>? sort = null)
+        {
             //没有查询指定字段时，走以下逻辑
-            if (fields == null || fields.Length == 0) {
-                if (sort == null) {
+            if (fields == null || fields.Length == 0)
+            {
+                if (sort == null)
+                {
                     return await _dbSet.Find(filter).ToListAsync();
                 }
 
@@ -271,7 +306,8 @@ namespace Infrastructure.RepositoryImpl {
             var projection = Builders<T>.Projection.Combine(fieldList);
             fieldList?.Clear();
 
-            if (sort != null) {
+            if (sort != null)
+            {
                 return await _dbSet.Find(filter).Sort(sort).Project<T>(projection).ToListAsync();
             }
             return await _dbSet.Find(filter).Project<T>(projection).ToListAsync();
@@ -287,10 +323,13 @@ namespace Infrastructure.RepositoryImpl {
         /// <param name="sort">需要排序的字段</param>
         /// <returns></returns>
         public async Task<List<T>> FindListByPageAsync(FilterDefinition<T> filter, int pageIndex, int pageSize, string[]? fields = null,
-            SortDefinition<T>? sort = null) {
+            SortDefinition<T>? sort = null)
+        {
             //没有指定查询字段时
-            if (fields == null || fields.Length == 0) {
-                if (sort == null) {
+            if (fields == null || fields.Length == 0)
+            {
+                if (sort == null)
+                {
                     return await _dbSet.Find(filter)
                         .Skip((pageIndex - 1) * pageSize).Limit(pageSize).ToListAsync();
                 }
@@ -304,7 +343,8 @@ namespace Infrastructure.RepositoryImpl {
             var projections = Builders<T>.Projection.Combine(fieldList);
             fieldList.Clear();
 
-            if (sort == null) {
+            if (sort == null)
+            {
                 return await _dbSet.Find(filter).Project<T>(projections)
                     .Skip((pageIndex - 1) * pageSize).Limit(pageSize).ToListAsync();
             }

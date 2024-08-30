@@ -5,14 +5,17 @@ using Infrastructure;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Application.Services {
-    public class UserServices(UnityOfWork unityOfWork, IUserRepository userRepository) {
+namespace Application.Services
+{
+    public class UserServices(UnityOfWork unityOfWork, IUserRepository userRepository)
+    {
 
         /// <summary>
         /// 获取所有用户信息
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<UserInfo>> GetAllUserInfo() {
+        public async Task<IEnumerable<UserInfo>> GetAllUserInfo()
+        {
             var allUser = await userRepository.GetAllAsync();
             return allUser;
         }
@@ -22,18 +25,21 @@ namespace Application.Services {
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<UserInfo>> GetUserInfoByPage(UserPageVm vm) {
+        public async Task<IEnumerable<UserInfo>> GetUserInfoByPage(UserPageVm vm)
+        {
             //构造查询条件
             var buildFilter = Builders<UserInfo>.Filter;
             var filter = buildFilter.Empty;
             var sort = Builders<UserInfo>.Sort.Ascending(m => m.CreateTime);
 
             //根据昵称查询
-            if (!string.IsNullOrEmpty(vm.NickName)) {
+            if (!string.IsNullOrEmpty(vm.NickName))
+            {
                 filter = buildFilter.Eq(u => u.NickName, vm.NickName);
             }
             //根据id查询
-            if (!string.IsNullOrEmpty(vm.Id)) {
+            if (!string.IsNullOrEmpty(vm.Id))
+            {
                 filter = buildFilter.Eq(u => u.Id, vm.Id);
             }
 
@@ -50,7 +56,8 @@ namespace Application.Services {
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<UserInfo> GetUserInfoById(string id) {
+        public async Task<UserInfo> GetUserInfoById(string id)
+        {
             return await userRepository.GetByIdAsync(id);
         }
 
@@ -59,7 +66,8 @@ namespace Application.Services {
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
-        public async Task<UserInfo> AddUserInfo(UserVm vm) {
+        public async Task<UserInfo> AddUserInfo(UserVm vm)
+        {
             var builder = new UserInfo.Builder()
                 .SetUserName(vm.UserName)
                 .SetPassword(vm.Password)
@@ -78,7 +86,8 @@ namespace Application.Services {
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
-        public async Task<UserInfo> AddTransactionUserInfo(UserVm vm) {
+        public async Task<UserInfo> AddTransactionUserInfo(UserVm vm)
+        {
             using var session = await unityOfWork.InitTransaction();
 
             var builder = new UserInfo.Builder()
@@ -107,7 +116,8 @@ namespace Application.Services {
         /// <param name="id"></param>
         /// <param name="vm"></param>
         /// <returns></returns>
-        public async Task<UserInfo> UpdateUser(string id, UserVm vm) {
+        public async Task<UserInfo> UpdateUser(string id, UserVm vm)
+        {
             //创建修改条件
             var list = new List<FilterDefinition<UserInfo>> {
                 Builders<UserInfo>.Filter.Eq("_id", new ObjectId(id))
@@ -129,9 +139,10 @@ namespace Application.Services {
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> Delete(string id) {
+        public async Task<bool> Delete(string id)
+        {
             await userRepository.DeleteAsync(id);
-            var userInfo = (UserInfo?) await userRepository.GetByIdAsync(id);
+            var userInfo = (UserInfo?)await userRepository.GetByIdAsync(id);
             return userInfo == null;
         }
     }

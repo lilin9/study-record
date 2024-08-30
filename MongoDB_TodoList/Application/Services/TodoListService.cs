@@ -7,12 +7,14 @@ using MongoDB.Driver;
 
 namespace Application.Services
 {
-    public class TodoListService(UnityOfWork unityOfWork, ITodoListRepository todoListRepository) {
+    public class TodoListService(UnityOfWork unityOfWork, ITodoListRepository todoListRepository)
+    {
         /// <summary>
         /// 查找所有待办事项列表
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<TodoList>> GetAllTodoList() {
+        public async Task<IEnumerable<TodoList>> GetAllTodoList()
+        {
             return await todoListRepository.GetAllAsync();
         }
 
@@ -21,7 +23,8 @@ namespace Application.Services
         /// </summary>
         /// <param name="vm"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<TodoList>> GetTodoListByPage(TodoPageVm vm) {
+        public async Task<IEnumerable<TodoList>> GetTodoListByPage(TodoPageVm vm)
+        {
             //构造查询条件
             var builderFilter = Builders<TodoList>.Filter;
             var filter = builderFilter.Empty;
@@ -29,11 +32,13 @@ namespace Application.Services
             var sort = Builders<TodoList>.Sort.Ascending(t => t.CreateTime);
 
             //根据待办事项内容进行查询
-            if (!string.IsNullOrEmpty(vm.Content)) {
+            if (!string.IsNullOrEmpty(vm.Content))
+            {
                 filter = builderFilter.Eq(t => t.Content, vm.Content);
             }
             //根据 Id 查询
-            if (!string.IsNullOrEmpty(vm.Id)) {
+            if (!string.IsNullOrEmpty(vm.Id))
+            {
                 filter = builderFilter.Eq(t => t.Id, vm.Id);
             }
 
@@ -51,7 +56,8 @@ namespace Application.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<TodoList> GetTodoListById(string id) {
+        public async Task<TodoList?> GetTodoListById(string id)
+        {
             return await todoListRepository.GetByIdAsync(id);
         }
 
@@ -60,7 +66,8 @@ namespace Application.Services
         /// </summary>
         /// <param name="todo"></param>
         /// <returns></returns>
-        public async Task<TodoList> AddTodoList(TodoVm todo) {
+        public async Task<TodoList> AddTodoList(TodoVm todo)
+        {
             var todoBuild = new TodoList.Builder()
                 .SetContent(todo.Content)
                 .SetCompleteStatus(todo.CompleteStatus)
@@ -79,7 +86,8 @@ namespace Application.Services
         /// </summary>
         /// <param name="todo"></param>
         /// <returns></returns>
-        public async Task<TodoList> AddTransactionTodoList(TodoVm todo) {
+        public async Task<TodoList> AddTransactionTodoList(TodoVm todo)
+        {
             using var session = await unityOfWork.InitTransaction();
 
             var todoBuild = new TodoList.Builder()
@@ -105,7 +113,8 @@ namespace Application.Services
         /// <param name="id"></param>
         /// <param name="todo"></param>
         /// <returns></returns>
-        public async Task<TodoList> UpdateTodoList(string id, TodoVm todo) {
+        public async Task<TodoList> UpdateTodoList(string id, TodoVm todo)
+        {
             //创建修改条件
             var list = new List<FilterDefinition<TodoList>> {
                 Builders<TodoList>.Filter.Eq("_id", new ObjectId(id))
@@ -131,7 +140,8 @@ namespace Application.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> Delete(string id) {
+        public async Task<bool> Delete(string id)
+        {
             await todoListRepository.DeleteAsync(id);
             var todoList = (TodoList?)await todoListRepository.GetByIdAsync(id);
             return todoList == null;

@@ -1,10 +1,13 @@
 ﻿using MongoDB.Bson;
 
-namespace Domain.Entities {
-    public class TodoList: BaseEntity {
+namespace Domain.Entities
+{
+    public class TodoList : BaseEntity
+    {
         public TodoList() { }
 
-        public TodoList(Builder builder) {
+        public TodoList(Builder builder)
+        {
             Id = ObjectId.GenerateNewId().ToString();
             UserId = builder.UserId;
             Content = builder.Content;
@@ -46,7 +49,8 @@ namespace Domain.Entities {
         /// </summary>
         public int CompleteStatus { get; set; }
 
-        public class Builder {
+        public class Builder
+        {
             public string UserId { get; private set; }
             public string? Content { get; private set; }
             public DateTime ExpirationTime { get; private set; }
@@ -54,27 +58,33 @@ namespace Domain.Entities {
             public DateTime RemindTime { get; private set; }
             public int CompleteStatus { get; private set; }
 
-            public Builder SetUserId(string userId) {
+            public Builder SetUserId(string userId)
+            {
                 UserId = userId;
                 return this;
             }
-            public Builder SetContent(string? content) {
+            public Builder SetContent(string? content)
+            {
                 Content = content;
                 return this;
             }
-            public Builder SetExpirationTime(DateTime expirationTime) {
+            public Builder SetExpirationTime(DateTime expirationTime)
+            {
                 ExpirationTime = expirationTime;
                 return this;
             }
-            public Builder SetIsRemind(bool isRemind) {
+            public Builder SetIsRemind(bool isRemind)
+            {
                 IsRemind = isRemind;
                 return this;
             }
-            public Builder SetRemindTime(DateTime remindTime) {
+            public Builder SetRemindTime(DateTime remindTime)
+            {
                 RemindTime = remindTime;
                 return this;
             }
-            public Builder SetCompleteStatus(int completeStatus) {
+            public Builder SetCompleteStatus(int completeStatus)
+            {
                 CompleteStatus = completeStatus;
                 return this;
             }

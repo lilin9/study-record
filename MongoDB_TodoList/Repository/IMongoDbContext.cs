@@ -1,7 +1,9 @@
 ﻿using MongoDB.Driver;
 
-namespace Domain {
-    public interface IMongoDbContext: IDisposable {
+namespace Domain
+{
+    public interface IMongoDbContext : IDisposable
+    {
         /// <summary>
         /// 添加命令
         /// </summary>
