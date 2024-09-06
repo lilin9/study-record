@@ -1,5 +1,4 @@
 using System.Reflection;
-using MediatR;
 using WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //注入 MediaR 服务
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 //配置 AutoMapper 映射，将当前程序集中所有继承了Profile类的文件都找到并注入到系统
 builder.Services.AddAutoMapperSetup();  
 //注册所有Ioc服务
